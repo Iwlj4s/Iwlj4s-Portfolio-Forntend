@@ -1,13 +1,16 @@
-import axios from 'axios'
-
 <template>
   <div class="profile-card">
     <div class="profile-header">
       <img :src="userData.avatar_url" class="profile-avatar">
       
       <div class="profile-info">
-        <h1 class="profile-name">{{ userData.github_login}} || {{ userData.name }}</h1>
-        <span class="status-badge">Online</span>
+        <h1 class="profile-name">{{ userData.github_login }} || {{ userData.name }}</h1>
+        
+        <!-- Этот блок виден только авторизованному пользователю (вам) -->
+        <div v-if="isAdmin" class="admin-badge">
+          ⚙️ Вы авторизованы
+        </div>
+        
         <div class="bio" v-if="userData.bio">
           {{ userData.bio }}
         </div>
@@ -16,43 +19,163 @@ import axios from 'axios'
       <div class="github-data">
         <h2 class="section-title">GitHub Data</h2>
         <pre class="code-block">{{ JSON.stringify(userData, null, 2) }}</pre>
+        
+        <!-- Эти кнопки видны только вам -->
+        <div v-if="isAdmin" class="admin-actions">
+          <button @click="editProfile" class="edit-button">
+            Редактировать профиль
+          </button>
+        </div>
       </div>
     </div>
 
     <div class="projects-section">
       <h2 class="section-title">Projects</h2>
       <div 
-        v-for="project in testProjects" 
+        v-for="project in projects" 
         :key="project.id" 
         class="project-item"
       >
         <h3>{{ project.name }}</h3>
         <p>{{ project.description }}</p>
+        
+        <!-- Кнопка удаления только для админа -->
+        <button 
+          v-if="isAdmin" 
+          @click="deleteProject(project.id)" 
+          class="delete-button"
+        >
+          Удалить
+        </button>
+      </div>
+      
+      <!-- Форма добавления только для админа -->
+      <div v-if="isAdmin" class="add-project-form">
+        <h3>Добавить новый проект</h3>
+        <input v-model="newProject.name" placeholder="Название">
+        <textarea v-model="newProject.description" placeholder="Описание"></textarea>
+        <button @click="addProject">Добавить</button>
       </div>
     </div>
   </div>
 </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import axios from 'axios';
-  
-  const userData = ref({});
-  const testProjects = ref([
-    { id: 1, name: 'Portfolio Backend', description: 'FastAPI + Vue.js' },
-    { id: 2, name: 'Pet Project', description: 'Telegram Bot' }
-  ]);
-  
-  onMounted(async () => {
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const userData = ref({});
+const projects = ref([]);
+const isAdmin = ref(false);
+const newProject = ref({ name: '', description: '' });
+
+// Заменили testProjects на projects
+const testProjects = ref([
+  { id: 1, name: 'Portfolio Backend', description: 'FastAPI + Vue.js' },
+  { id: 2, name: 'Pet Project', description: 'Telegram Bot' }
+]);
+
+// Заменили isAuthenticated на isAdmin
+const isAuthenticated = ref(false);
+
+const loadData = async () => {
+  try {
+    // Пробуем загрузить данные для админа
+    const response = await axios.get('http://localhost:8000/admin/profile', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    });
+    userData.value = response.data.user;
+    projects.value = testProjects.value; // Используем projects вместо testProjects
+    isAdmin.value = true;
+    isAuthenticated.value = true;
+  } catch (error) {
     try {
-      const response = await axios.get('http://localhost:8000/admin/me/', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-      userData.value = response.data;
-    } catch (error) {
-      console.error('Ошибка загрузки данных:', error);
+      const publicResponse = await axios.get('http://localhost:8000/public/profile');
+      userData.value = publicResponse.data.user;
+      projects.value = testProjects.value; // Используем projects вместо testProjects
+      isAdmin.value = false;
+      isAuthenticated.value = false;
+    } catch (publicError) {
+      console.error('Error loading public profile:', publicError);
     }
-  });
-  </script>
+  }
+};
+
+const editProfile = () => {
+  console.log('Editing profile...');
+};
+
+const deleteProject = (id) => {
+  console.log('Deleting project:', id);
+  projects.value = projects.value.filter(project => project.id !== id);
+};
+
+const addProject = () => {
+  if (newProject.value.name && newProject.value.description) {
+    projects.value.push({
+      id: Date.now(),
+      ...newProject.value
+    });
+    newProject.value = { name: '', description: '' };
+  }
+};
+
+onMounted(loadData);
+</script>
+
+<style scoped>
+/* Ваши стили остаются без изменений */
+.admin-badge {
+  display: inline-block;
+  background: rgba(100, 255, 218, 0.2);
+  color: #64ffda;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+  font-size: 0.9em;
+}
+
+.admin-actions {
+  margin-top: 20px;
+}
+
+.edit-button {
+  background: #64ffda;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-button {
+  background: #ff5555;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.add-project-form {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(16, 16, 16, 0.5);
+  border-radius: 8px;
+}
+
+.add-project-form input,
+.add-project-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+}
+</style>

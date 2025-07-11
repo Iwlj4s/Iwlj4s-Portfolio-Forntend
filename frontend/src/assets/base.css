@@ -18,7 +18,7 @@ body {
   padding: 30px;
   display: grid;
   grid-template-columns: 1fr 1.5fr;
-  gap: 100px;
+  gap: 50px;
 }
 
 .profile-header {

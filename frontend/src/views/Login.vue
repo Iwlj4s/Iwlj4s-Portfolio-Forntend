@@ -32,7 +32,7 @@ const loginWithGitHub = () => {
     if (event.data.type === 'github-auth-success') {
       localStorage.setItem('access_token', event.data.token)
       localStorage.setItem('user', JSON.stringify(event.data.user))
-      router.push('/profile')
+      router.push('/admin/profile')
     }
     else if (event.data.type === 'github-auth-error') {
       alert(`Ошибка авторизации: ${event.data.error}`)
