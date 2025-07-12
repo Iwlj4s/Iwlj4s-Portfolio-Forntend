@@ -1,5 +1,7 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import './assets/main.css';
+import './assets/base.css';
 
 </script>
 
@@ -7,9 +9,3 @@ import { RouterView } from 'vue-router'
   <RouterView />
 </template>
 
-<style>
-/* Глобальные стили */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-</style>

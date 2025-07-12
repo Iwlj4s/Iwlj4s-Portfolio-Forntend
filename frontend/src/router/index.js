@@ -5,6 +5,7 @@ import Profile from '@/views/Profile.vue'
 import PublicProfile from '@/views/PublicProfile.vue'
 
 
+
 const routes = [
   {
     path: '/',
