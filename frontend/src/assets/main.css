@@ -3,7 +3,7 @@
 
 body {
   font-family: 'JetBrains Mono', monospace;
-  background: #000;
+  background: #111111;
   color: #e0e0e0;
   line-height: 1.6;
   font-size: 18px;
@@ -14,11 +14,11 @@ body {
 /* ===== КАРТОЧКА ПРОФИЛЯ ===== */
 .profile-card {
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 50px auto;
   padding: 30px;
   display: grid;
   grid-template-columns: 1fr 1.5fr;
-  gap: 40px;
+  gap: 50px;
 }
 
 .profile-header {
@@ -46,32 +46,46 @@ body {
 .profile-name {
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #b6d1cb;
   margin-bottom: 10px;
 }
 
 .status-badge {
   display: inline-block;
   background: #1e7f5e;
-  color: #64ffda;
+  color: #b6d1cb;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.9rem;
   text-transform: uppercase;
 }
 
+
 .github-data {
   grid-area: github;
   background: #111;
   padding: 20px;
-  border-left: 3px solid #64ffda;
+  border-left: 3px solid #b6d1cb;
+  border: 1px solid #b6d1cb;
+
 }
+
 
 .section-title {
   font-size: 1.5rem;
-  color: #64ffda;
-  margin-bottom: 20px;
+  color: #e8f0ee;
+  margin-bottom: 10px;
   text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-section-title{
+  font-size: 1.3rem;
+  color: #e8f0ee;
+  margin-top: 10px;
+
+  margin-bottom: 8px;
+  text-transform:capitalize;
   letter-spacing: 1px;
 }
 
@@ -88,18 +102,19 @@ body {
 .projects-section {
   background: #111;
   padding: 30px;
-  border: 1px solid #333;
+  border-left: 3px solid #b6d1cb;
+  border: 1px solid #b6d1cb;
 }
 
 .project-item {
   padding: 20px;
   margin-bottom: 15px;
   background: #0a0a0a;
-  border-left: 3px solid #64ffda;
+  border-left: 3px solid #b6d1cb;;
 }
 
 .project-item h3 {
-  color: #64ffda;
+  color: #b6d1cb;;
   font-size: 1.2rem;
   margin-bottom: 8px;
 }

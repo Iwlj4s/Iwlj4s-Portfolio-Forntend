@@ -1,26 +1,25 @@
 <template>
   <div class="profile-card">
     <div class="profile-header">
-      <img :src="userData.avatar_url" class="profile-avatar">
+      <img :src="userGithubData.avatar_url" class="profile-avatar">
       
       <div class="profile-info">
-        <h1 class="profile-name">{{ userData.github_login }} || {{ userData.name }}</h1>
+        <h1 class="profile-name">{{ userGithubData.github_login }} || {{ userGithubData.name }}</h1>
         
-        <!-- Этот блок виден только авторизованному пользователю (вам) -->
         <div v-if="isAdmin" class="admin-badge">
           ⚙️ Вы авторизованы
         </div>
         
-        <div class="bio" v-if="userData.bio">
-          {{ userData.bio }}
-        </div>
+        
       </div>
 
       <div class="github-data">
-        <h2 class="section-title">GitHub Data</h2>
-        <pre class="code-block">{{ JSON.stringify(userData, null, 2) }}</pre>
+        <h2 class="section-title">User Info</h2>
+        <h4 class="info-section-title">User Data</h4>
+        <pre class="code-block">{{ JSON.stringify(userData, null, 2) }}</pre>      
+        <h4 class="info-section-title">Github Data</h4>
+        <pre class="code-block">{{ JSON.stringify(userGithubData, null, 2) }}</pre>
         
-        <!-- Эти кнопки видны только вам -->
         <div v-if="isAdmin" class="admin-actions">
           <button @click="editProfile" class="edit-button">
             Редактировать профиль
@@ -64,37 +63,39 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
+const userGithubData = ref({});
 const userData = ref({});
 const projects = ref([]);
 const isAdmin = ref(false);
 const newProject = ref({ name: '', description: '' });
 
-// Заменили testProjects на projects
 const testProjects = ref([
   { id: 1, name: 'Portfolio Backend', description: 'FastAPI + Vue.js' },
   { id: 2, name: 'Pet Project', description: 'Telegram Bot' }
 ]);
 
-// Заменили isAuthenticated на isAdmin
 const isAuthenticated = ref(false);
 
 const loadData = async () => {
   try {
-    // Пробуем загрузить данные для админа
     const response = await axios.get('http://localhost:8000/admin/profile', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
     });
-    userData.value = response.data.user;
-    projects.value = testProjects.value; // Используем projects вместо testProjects
+    console.log('Admin profile response:', response.data);
+    userGithubData.value = response.data.user_github_data;
+    userData.value = response.data.user_data;
+    projects.value = testProjects.value; 
     isAdmin.value = true;
     isAuthenticated.value = true;
   } catch (error) {
     try {
       const publicResponse = await axios.get('http://localhost:8000/public/profile');
-      userData.value = publicResponse.data.user;
-      projects.value = testProjects.value; // Используем projects вместо testProjects
+      console.log('Public profile response:', publicResponse.data);
+      userGithubData.value = publicResponse.data.user_github_data;
+      userData.value = publicResponse.data.user_data;
+      projects.value = testProjects.value;
       isAdmin.value = false;
       isAuthenticated.value = false;
     } catch (publicError) {
@@ -130,7 +131,7 @@ onMounted(loadData);
 .admin-badge {
   display: inline-block;
   background: rgba(100, 255, 218, 0.2);
-  color: #64ffda;
+  color: #b6d1cb;;
   padding: 5px 10px;
   border-radius: 4px;
   margin: 10px 0;
@@ -142,7 +143,7 @@ onMounted(loadData);
 }
 
 .edit-button {
-  background: #64ffda;
+  background: #b6d1cb;;
   color: #000;
   border: none;
   padding: 8px 16px;
