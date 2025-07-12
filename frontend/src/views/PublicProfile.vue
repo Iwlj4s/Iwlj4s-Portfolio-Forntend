@@ -2,7 +2,6 @@
   <ProfileCard
     :userGithubData="userGithubData"
     :userData="userData"
-    :projects="projects"
   />
 </template>
 
@@ -24,7 +23,6 @@ const loadData = async () => {
     
     userGithubData.value = response.data.user_github_data || {};
     userData.value = response.data.user_data || {};
-    projects.value = response.data.projects || []; 
     
     console.log('Github data:', userGithubData.value);
     console.log('User data:', userData.value);
