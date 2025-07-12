@@ -19,7 +19,7 @@
     </div>
     <div class="projects-section">
         <h2 class="section-title">About Me</h2>
-        <div v-if="userData.bio" v-html="userData.bio"></div>
+        <div v-if="userBio" v-html="userBio"></div>
         <div v-else>Информации нет</div>
         
         <div >
@@ -56,14 +56,16 @@ const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false
+  },
+  userBio: {
+    type: String
   }
 })
 
 const emit = defineEmits(['update:bio', 'toggle-edit'])
 
-const editableBio = ref(props.userData.bio || '')
-
-watch(() => props.userData.bio, (newBio) => {
+const editableBio = ref(props.userBio || '')
+watch(() => props.userBio, (newBio) => {
   editableBio.value = newBio || ''
 })
 
@@ -73,7 +75,7 @@ function handleSave() {
 }
 
 function handleCancel() {
-  editableBio.value = props.userData.bio || ''
+  editableBio.value = props.userBio || ''
   emit('toggle-edit')
 }
 </script>

@@ -2,10 +2,12 @@
   <div class="bio-editor-container">
     <div class="quill-wrapper">
       <QuillEditor
-        :content="modelValue"
-        @update:content="updateValue"
+        ref="quillEditor"
+        v-model:content="content"
+        contentType="html"
         :options="editorOptions"
         class="bio-editor"
+        @update:content="handleContentUpdate"
       />
     </div>
     <div class="editor-actions">
@@ -16,6 +18,7 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
@@ -27,6 +30,19 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'save', 'cancel'])
+
+const content = ref(props.modelValue)
+
+// Watch for external changes to modelValue
+watch(() => props.modelValue, (newVal) => {
+  if (newVal !== content.value) {
+    content.value = newVal
+  }
+})
+
+const handleContentUpdate = (newContent) => {
+  emit('update:modelValue', newContent)
+}
 
 const editorOptions = {
   theme: 'snow',
@@ -41,10 +57,6 @@ const editorOptions = {
   }
 }
 
-const updateValue = (value) => {
-  emit('update:modelValue', value)
-}
-
 const save = () => {
   emit('save')
 }
@@ -53,4 +65,3 @@ const cancel = () => {
   emit('cancel')
 }
 </script>
-

@@ -2,6 +2,7 @@
   <ProfileCard
     :userGithubData="userGithubData"
     :userData="userData"
+    :userBio="userBio"
   />
 </template>
 
@@ -14,6 +15,7 @@ import '../assets/base.css';
 
 const userGithubData = ref({});
 const userData = ref({});
+const userBio = ref();
 const projects = ref([]);
 
 const loadData = async () => {
@@ -23,6 +25,7 @@ const loadData = async () => {
     
     userGithubData.value = response.data.user_github_data || {};
     userData.value = response.data.user_data || {};
+    userBio.value = response.data.user_bio || {}
     
     console.log('Github data:', userGithubData.value);
     console.log('User data:', userData.value);
