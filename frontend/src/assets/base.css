@@ -54,7 +54,7 @@ body {
   white-space: nowrap; /* Запрещаем перенос текста */
   font-size: 2rem;
   font-weight: 700;
-  color: #e8f0ee;
+  color: #b6d1cb;
 }
 
 .status-badge {
@@ -80,7 +80,7 @@ body {
 
 .section-title {
   font-size: 1.5rem;
-  color: #e8f0ee;
+  color: #b6d1cb;
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -319,4 +319,76 @@ body {
     width: 22px;
     height: 22px;
   }
+}
+
+.navbar{
+  margin-top: 5px;
+  display: flex;
+}
+
+.projects-navbar {
+  grid-area: nav;
+  
+}
+
+.nav-items {
+  padding: 4px;
+  margin-top: 10px;
+  background: rgba(17, 17, 17, 0.7);
+  border-radius: 6px;
+  border: 1px solid rgba(182, 209, 203, 0.2);
+
+}
+
+.nav-item {
+  color: #b6d1cb;
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  padding: 5px;
+
+  background: rgba(110, 118, 129, 0.2);
+  color: #e8f0ee;
+  transform: translateX(5px);
+}
+
+.active-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b6d1cb;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  border-radius: 6px;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+  width: fit-content;
+}
+
+.project-icon {
+  color: #1e7f5e;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.project-name {
+  font-size: 1rem;
+}
+
+.admin-note {
+  color: #1e7f5e;
+  font-size: 0.9rem;
+  font-style: italic;
+  user-select: none;
+}
+
+.projects-navbar {
+  grid-area: nav;
+  margin-left: 1px;
 }

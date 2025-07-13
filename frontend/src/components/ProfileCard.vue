@@ -30,15 +30,21 @@
           </svg>
           <span class="github-text">GitHub Profile</span>
         </a>
-      </div>
 
+
+        <div class="navbar">
+            <Navbar :is-admin="isAdmin" />
+        </div>
+
+      </div>
+      
+      
       <div class="github-data">
         <h2 class="section-title">User Info</h2>
         <h3 class="info-section-title">User Data</h3>
         <pre class="code-block">{{ JSON.stringify(userData, null, 2) }}</pre>        
         <h3 class="info-section-title">Github Data</h3>
         <pre class="code-block">{{ JSON.stringify(userGithubData, null, 2) }}</pre>
-        
       </div>
 
     </div>
@@ -64,6 +70,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import BioEditor from './BioEditor.vue'
+import Navbar from './Navbar.vue'
 
 const props = defineProps({
   userGithubData: {
