@@ -279,3 +279,44 @@ body {
   from { opacity: 1; }
   to { opacity: 0; transform: translateY(-10px); }
 }
+
+/* Стили для GitHub иконки */
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: #b6d1cb;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.github-link:hover {
+  background: rgba(110, 118, 129, 0.2);
+  color: #e8f0ee;
+  transform: translateY(-2px);
+}
+
+.github-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.github-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .github-link {
+    padding: 5px 8px;
+  }
+  .github-icon {
+    width: 22px;
+    height: 22px;
+  }
+}

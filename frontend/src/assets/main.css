@@ -49,10 +49,12 @@ body {
 }
 
 .profile-name {
+  display: inline; /* Делаем имя inline-элементом */
+  margin: 0; /* Убираем отступы */
+  white-space: nowrap; /* Запрещаем перенос текста */
   font-size: 2rem;
   font-weight: 700;
   color: #e8f0ee;
-  margin-bottom: 10px;
 }
 
 .status-badge {
@@ -123,6 +125,7 @@ body {
   max-height: 100%;
 
   margin-top: 212px;
+
 }
 
 .projects-section img {
@@ -235,4 +238,85 @@ body {
   max-width: 50px !important;
   max-height: 50px !important;
   object-fit: contain !important;
+}
+
+
+.name-and-logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap; /* Запрещаем перенос строк */
+}
+
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 15px;
+  color: #b6d1cb;
+  transition: all 0.3s ease;
+  display: inline-flex; /* Размещаем кнопку в строке */
+  align-items: center;
+}
+
+.logout-btn:hover {
+  color: #e8f0ee;
+  transform: translateX(3px);
+}
+
+.logout-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* Анимация при выходе */
+.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Стили для GitHub иконки */
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: #b6d1cb;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.github-link:hover {
+  background: rgba(110, 118, 129, 0.2);
+  color: #e8f0ee;
+  transform: translateY(-2px);
+}
+
+.github-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.github-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .github-link {
+    padding: 5px 8px;
+  }
+  .github-icon {
+    width: 22px;
+    height: 22px;
+  }
 }
