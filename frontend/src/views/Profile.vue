@@ -8,6 +8,7 @@
       :is-editing="isEditing"
       @update:bio="updateBio"
       @toggle-edit="toggleEdit"
+      @logout="logout"
     >
       <!-- Слот для админских элементов внутри карточки -->
       <template v-if="isAdmin && !isEditing" #admin-content>
@@ -21,10 +22,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; // Добавляем импорт
+
 import axios from 'axios';
 import ProfileCard from '../components/ProfileCard.vue';
 import axiosInstance from '../axiosInstance.js'
 
+const router = useRouter(); // Инициализируем router
 
 const userGithubData = ref({});
 const userData = ref({});
@@ -83,6 +87,14 @@ const updateBio = async (newBio) => {
   }
 }
 
+const logout = async () => {
+  try {
+    await axiosInstance.post('/admin/logout');
+  } finally {
+    localStorage.removeItem('access_token');
+    router.push('/');
+  }
+}
 
 onMounted(loadData);
 </script>

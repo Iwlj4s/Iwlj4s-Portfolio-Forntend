@@ -4,7 +4,21 @@
       <img :src="userGithubData.avatar_url" class="profile-avatar">
       
       <div class="profile-info">
-        <h1 class="profile-name">{{ userGithubData.github_login }} || {{ userGithubData.name }}</h1>
+        <div class="name-and-logout">
+          <h1 class="profile-name">{{ userGithubData.github_login }} || {{ userGithubData.name }}</h1>
+          <button 
+            v-if="isAdmin" 
+            @click="$emit('logout')"
+            class="logout-btn"
+            title="Выйти"
+          >
+            <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
+        </div>
+
+        
       </div>
 
       <div class="github-data">
