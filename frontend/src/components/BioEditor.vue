@@ -11,8 +11,8 @@
       />
     </div>
     <div class="editor-actions">
-      <button @click="save" class="save-button">Сохранить</button>
-      <button @click="cancel" class="cancel-button">Отмена</button>
+      <button @click="save" class="button-common save-button">Сохранить</button>
+      <button @click="cancel" class="button-common cancel-button">Отмена</button>
     </div>
   </div>
 </template>
@@ -51,7 +51,10 @@ const editorOptions = {
       ['bold', 'italic', 'underline', 'strike'],
       [{ header: [1, 2, 3, false] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link'],
+      [{ 'align': [] }], // Добавляем выпадающий список для выравнивания
+      [{ color: [] }],
+      ['link', 'image', 'video'],
+      ['code-block'],
       ['clean']
     ]
   }

@@ -111,9 +111,85 @@ body {
 }
 
 .projects-section {
-  display: block;
   background: #111;
   padding: 20px;
   border-left: 3px solid #b6d1cb;
   border: 1px solid #b6d1cb;
+  max-width: 600px; /* Задаём максимальную ширину блока */
+  max-height: 50%;
+  margin-top: 212px;
+}
+
+.edit-button {
+  font-family: 'JetBrains Mono', monospace;
+
+  background-color: #617561; /* зеленый */
+  color: rgb(255, 255, 255);
+  padding: 15px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+
+}
+
+.edit-button:hover {
+  background-color: #3b4d3c;
+}
+
+/* Общий стиль кнопок, аналогичный .edit-button */
+.button-common {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: #617561; /* зеленый */
+  color: rgb(255, 255, 255);
+  padding: 15px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+  margin: 0 10px; /* Отступы между кнопками */
+}
+
+.button-common:hover {
+  background-color: #3b4d3c;
+}
+
+/* Контейнер для выравнивания кнопок по центру */
+.editor-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.bio-editor-container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.quill-wrapper {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+/* Сам редактор Quill */
+.bio-editor {
+  width: 100% !important; /* чтобы редактор занимал всю ширину контейнера */
+  box-sizing: border-box;
+  min-height: 150px; /* минимальная высота редактора */
+  max-height: 300px; /* ограничение по высоте */
+  overflow-y: auto; /* прокрутка, если текста много */
+}
+
+/* Можно дополнительно ограничить ширину, если надо */
+.bio-editor-container, .quill-wrapper {
+  overflow: hidden;
 }

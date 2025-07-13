@@ -17,8 +17,12 @@ body {
   margin: 50px auto;
   padding: 30px;
   display: grid;
+  grid-template-areas:
+    "avatar info"
+    "github about";
   grid-template-columns: 1fr 1.5fr;
-  gap: 50px;
+  gap: 30px;
+  align-items: start; /* Важно! */
 }
 
 .profile-header {
@@ -115,9 +119,17 @@ body {
   padding: 20px;
   border-left: 3px solid #b6d1cb;
   border: 1px solid #b6d1cb;
-  max-width: 100%;
-  max-height: 50%;
+  max-width: 600px; /* Задаём максимальную ширину блока */
+  max-height: 100%;
+
   margin-top: 212px;
+}
+
+.projects-section img {
+  max-width: 50% !important;
+  height: auto !important;
+  display: block;
+  margin: 10px auto;
 }
 
 .edit-button {
@@ -133,8 +145,94 @@ body {
   font-size: 15px;
   transition: background-color 0.3s ease;
 
+  margin-top: 50px;
+
 }
 
 .edit-button:hover {
   background-color: #3b4d3c;
+}
+
+/* Общий стиль кнопок, аналогичный .edit-button */
+.button-common {
+  font-family: 'JetBrains Mono', monospace;
+  background-color: #617561; /* зеленый */
+  color: rgb(255, 255, 255);
+  padding: 15px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+  margin: 0 10px; /* Отступы между кнопками */
+}
+
+.button-common:hover {
+  background-color: #3b4d3c;
+}
+
+/* Контейнер для выравнивания кнопок по центру */
+.editor-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.bio-editor-container {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+.quill-wrapper {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+.ql-align-center {
+  text-align: center !important;
+}
+
+.ql-align-right {
+  text-align: right !important;
+}
+
+.ql-align-justify {
+  text-align: justify !important;
+}
+
+/* Для изображений с выравниванием */
+.ql-align-center img,
+.ql-align-right img,
+.ql-align-justify img {
+  display: inline-block;
+}
+
+
+/* Сам редактор Quill */
+.bio-editor {
+  width: 100% !important; /* чтобы редактор занимал всю ширину контейнера */
+  box-sizing: border-box;
+  min-height: 150px; /* минимальная высота редактора */
+  max-height: 300px; /* ограничение по высоте */
+  overflow-y: auto; /* прокрутка, если текста много */
+}
+
+/* Можно дополнительно ограничить ширину, если надо */
+.bio-editor-container, .quill-wrapper {
+  overflow: hidden;
+}
+
+.bio-editor img {
+  width: 50px !important;
+  height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
+  object-fit: contain !important;
 }

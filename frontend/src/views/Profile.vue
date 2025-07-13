@@ -23,6 +23,8 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import ProfileCard from '../components/ProfileCard.vue';
+import axiosInstance from '../axiosInstance.js'
+
 
 const userGithubData = ref({});
 const userData = ref({});
@@ -33,7 +35,7 @@ const userBio = ref()
 
 const loadData = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/admin/profile', {
+    const response = await axiosInstance.get('/admin/profile', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
@@ -44,7 +46,7 @@ const loadData = async () => {
     isAdmin.value = true;
   } catch (error) {
     try {
-      const publicResponse = await axios.get('http://localhost:8000/public/profile');
+      const publicResponse = await axiosInstance.get('/public/profile');
       userGithubData.value = publicResponse.data.user_github_data;
       userData.value = publicResponse.data.user_data;
       userBio.value = publicResponse.data.user_bio
@@ -63,7 +65,7 @@ const toggleEdit = () => {
 // Новая функция для обновления био на сервере
 const updateBio = async (newBio) => {
   try {
-    const response = await axios.patch('http://localhost:8000/admin/change_bio', 
+    const response = await axiosInstance.patch('/admin/change_bio', 
       { bio: newBio }, 
       {
         headers: {
