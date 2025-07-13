@@ -10,7 +10,8 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: { forGuests: true }
   },
   {
     path: '/admin/profile',
@@ -35,12 +36,17 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const token = localStorage.getItem('access_token')
+  
+  // Если route требует авторизации, а токена нет
   if (to.meta.requiresAuth && !token) {
-    next('/')
-  } else {
-    next()
+    return '/'
+  }
+  
+  // Если route только для гостей, а пользователь авторизован
+  if (to.meta.forGuests && token) {
+    return '/admin/profile' // Перенаправляем в админку
   }
 })
 

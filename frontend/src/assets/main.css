@@ -17,8 +17,12 @@ body {
   margin: 50px auto;
   padding: 30px;
   display: grid;
+  grid-template-areas:
+    "avatar info"
+    "github about";
   grid-template-columns: 1fr 1.5fr;
-  gap: 50px;
+  gap: 30px;
+  align-items: start; /* Важно! */
 }
 
 .profile-header {
@@ -116,8 +120,16 @@ body {
   border-left: 3px solid #b6d1cb;
   border: 1px solid #b6d1cb;
   max-width: 600px; /* Задаём максимальную ширину блока */
-  max-height: 50%;
+  max-height: 100%;
+
   margin-top: 212px;
+}
+
+.projects-section img {
+  max-width: 50% !important;
+  height: auto !important;
+  display: block;
+  margin: 10px auto;
 }
 
 .edit-button {
@@ -132,6 +144,8 @@ body {
   font-weight: 600;
   font-size: 15px;
   transition: background-color 0.3s ease;
+
+  margin-top: 50px;
 
 }
 
@@ -169,15 +183,36 @@ body {
 .bio-editor-container {
   width: 100%;
   max-width: 100%;
+  max-height: 100%;
   box-sizing: border-box;
+  display: block;
 }
 
 .quill-wrapper {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  display: block;
 }
 
+.ql-align-center {
+  text-align: center !important;
+}
+
+.ql-align-right {
+  text-align: right !important;
+}
+
+.ql-align-justify {
+  text-align: justify !important;
+}
+
+/* Для изображений с выравниванием */
+.ql-align-center img,
+.ql-align-right img,
+.ql-align-justify img {
+  display: inline-block;
+}
 
 
 /* Сам редактор Quill */
@@ -192,4 +227,12 @@ body {
 /* Можно дополнительно ограничить ширину, если надо */
 .bio-editor-container, .quill-wrapper {
   overflow: hidden;
+}
+
+.bio-editor img {
+  width: 50px !important;
+  height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
+  object-fit: contain !important;
 }
