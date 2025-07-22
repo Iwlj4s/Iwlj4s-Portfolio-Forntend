@@ -392,3 +392,83 @@ body {
   grid-area: nav;
   margin-left: 1px;
 }
+
+
+/* Рамка и фон для проектов и заголовков */
+.bordered-box {
+  background: #111;
+  padding: 20px;
+  border-left: 3px solid #b6d1cb;
+  border: 1px solid #b6d1cb;
+  border-radius: 7px;
+}
+
+/* Заголовок проекта */
+.project-name-box {
+  font-size: 1.5rem;
+  color: #b6d1cb;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+/* Контейнер для списка проектов с сеткой */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* Убираем вертикальный margin между проектами, теперь gap задаёт отступы */
+.projects-list > .project-item + .project-item {
+  margin-top: 0;
+}
+
+/* Описание проекта */
+.project-description-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+  color: #ccc;
+  font-size: 1rem;
+  line-height: 1.4em;
+  white-space: pre-wrap;
+}
+
+/* Ссылка на проект */
+.project-link {
+  color: #1e7f5e;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.project-link:hover {
+  color: #3b4d3c;
+}
+
+/* Кнопка переключения описания */
+.toggle-desc-btn {
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  margin-top: 5px;
+  background-color: transparent;
+  border: 1px solid #617561;
+  color: #b6d1cb;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-desc-btn:hover {
+  background-color: #3b4d3c;
+  color: #e8f0ee;
+}
+
+/* Для корректного отображения переносов в описании */
+.project-description p,
+.project-description pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

@@ -1,7 +1,7 @@
 <template>
     <nav class="projects-navbar">
       <div class="nav-items">
-        <router-link to="/profile" class="nav-item" exact-active-class="active-link">
+        <router-link to="/public/profile" class="nav-item" exact-active-class="active-link">
           <span class="project-icon">›</span>
           <span class="project-name">Профиль</span>
         </router-link>

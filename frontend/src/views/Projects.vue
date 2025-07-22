@@ -1,63 +1,55 @@
 <template>
-    <div class="projects-page">
-      <Navbar :is-admin="isAdmin" :projects="projects"/>
-      
-      <div class="project-content">
-        <h2 class="section-title">{{ selectedProject?.name || 'Select project' }}</h2>
-        <div v-if="selectedProject">
-          <p>{{ selectedProject.description }}</p>
-          <div class="tech-stack">
-            <span v-for="tech in selectedProject.tech" :key="tech" class="tech-tag">
-              {{ tech }}
-            </span>
-          </div>
-        </div>
-        <div v-else>
-          <p>Select a project from the navbar to view details</p>
-        </div>
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue'
-  import Navbar from '../components/Navbar.vue'
-  
-  const isAdmin = ref(true) // В реальном коде берем из props/store
-  const selectedProject = ref(null)
-  
-  const projects = ref([
-    // ... тестовые данные ...
-  ])
-  </script>
-  
-  <style scoped>
-  .projects-page {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 30px;
+  <div class="projects-container">
+    <ProjectsCard
+      :projects="projects"
+      :is-admin="isAdmin"
+      @add-project="onAddProject"
+    >
+      <template #admin-content="{ project }">
+        <button class="button-common" @click="editProject(project)">Редактировать</button>
+        <button class="button-common" @click="deleteProject(project)">Удалить</button>
+      </template>
+    </ProjectsCard>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import ProjectsCard from '../components/ProjectsCard.vue'
+
+const isAdmin = ref(true) // для теста переключаем режим админа
+
+const projects = ref([
+  {
+    id: 1,
+    name: 'Iwlj4s/BookReviews',
+    description: 'Описание первого проекта',
+    link: 'https://github.com/Iwlj4s/BookReviews'
+  },
+  {
+    id: 2,
+    name: 'Проект 2',
+    description: 'Описание второго проекта',
+    link: ''
   }
-  
-  .project-content {
-    background: #111;
-    padding: 30px;
-    border: 1px solid #b6d1cb;
-  }
-  
-  .tech-stack {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .tech-tag {
-    background: #1e7f5e;
-    color: #b6d1cb;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-  }
-  </style>
+])
+
+function onAddProject() {
+  alert('Добавление проекта (заглушка)')
+}
+
+function editProject(project) {
+  alert(`Редактирование проекта: ${project.name} (заглушка)`)
+}
+
+function deleteProject(project) {
+  alert(`Удаление проекта: ${project.name} (заглушка)`)
+}
+</script>
+
+<style scoped>
+.projects-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+</style>

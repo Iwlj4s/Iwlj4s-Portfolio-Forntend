@@ -3,6 +3,7 @@ import Callback from '@/views/Callback.vue'
 import Login from '@/views/Login.vue'
 import Profile from '@/views/Profile.vue'
 import PublicProfile from '@/views/PublicProfile.vue'
+import Projects from '@/views/Projects.vue'
 
 
 
@@ -23,6 +24,13 @@ const routes = [
     path: '/public/profile',
     name: 'PublicProfile',
     component: PublicProfile,
+    meta: { requiresAuth: false }
+  },
+
+  {
+    path: '/projects',
+    name: 'Projects',
+    component: Projects,
     meta: { requiresAuth: false }
   },
   {
