@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Profile from '@/views/Profile.vue'
 import PublicProfile from '@/views/PublicProfile.vue'
 import Projects from '@/views/Projects.vue'
+import AdminProjects from '@/views/AdminProjects.vue'
 
 
 
@@ -32,6 +33,12 @@ const routes = [
     name: 'Projects',
     component: Projects,
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/admin/projects',
+    name: 'AdminProjects',
+    component: AdminProjects,
+    meta: { requiresAuth: true }
   },
   {
     path: '/auth/callback',

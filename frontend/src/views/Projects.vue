@@ -1,55 +1,38 @@
 <template>
   <div class="projects-container">
+    <div v-if="isLoading" class="loading">Загрузка проектов...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
     <ProjectsCard
+      v-else
       :projects="projects"
-      :is-admin="isAdmin"
-      @add-project="onAddProject"
-    >
-      <template #admin-content="{ project }">
-        <button class="button-common" @click="editProject(project)">Редактировать</button>
-        <button class="button-common" @click="deleteProject(project)">Удалить</button>
-      </template>
-    </ProjectsCard>
+      :is-admin="false"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import ProjectsCard from '../components/ProjectsCard.vue'
 
-const isAdmin = ref(true) // для теста переключаем режим админа
+const projects = ref([])
+const isLoading = ref(false)
+const error = ref(null)
 
-const projects = ref([
-  {
-    id: 1,
-    name: 'Iwlj4s/BookReviews',
-    description: 'Описание первого проекта',
-    link: 'https://github.com/Iwlj4s/BookReviews'
-  },
-  {
-    id: 2,
-    name: 'Проект 2',
-    description: 'Описание второго проекта',
-    link: ''
+const loadProjects = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+    const response = await axios.get('http://localhost:8000/public/projects')
+    projects.value = response.data
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Ошибка загрузки проектов'
+    console.error('Error loading projects:', err)
+  } finally {
+    isLoading.value = false
   }
-])
-
-function onAddProject() {
-  alert('Добавление проекта (заглушка)')
 }
 
-function editProject(project) {
-  alert(`Редактирование проекта: ${project.name} (заглушка)`)
-}
-
-function deleteProject(project) {
-  alert(`Удаление проекта: ${project.name} (заглушка)`)
-}
+onMounted(loadProjects)
 </script>
 
-<style scoped>
-.projects-container {
-  max-width: 900px;
-  margin: 0 auto;
-}
-</style>

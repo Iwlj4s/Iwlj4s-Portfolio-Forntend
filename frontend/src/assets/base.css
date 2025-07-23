@@ -401,72 +401,138 @@ body {
   border-radius: 7px;
 }
 
-/* Заголовок проекта */
-.project-name-box {
-  font-size: 1.5rem;
-  color: #b6d1cb;
-  margin-bottom: 12px;
-  font-weight: 700;
+/* ===== СТИЛИ ДЛЯ ПРОЕКТОВ ===== */
+.projects-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 0 20px;
 }
 
-/* Контейнер для списка проектов с сеткой */
-.grid-container {
+.projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
 }
 
-/* Убираем вертикальный margin между проектами, теперь gap задаёт отступы */
-.projects-list > .project-item + .project-item {
-  margin-top: 0;
+.project-card {
+  background: #111;
+  padding: 20px;
+  border-left: 3px solid #b6d1cb;
+  border: 1px solid #b6d1cb;
+  border-radius: 7px;
+  transition: all 0.3s ease;
 }
 
-/* Описание проекта */
-.project-description-wrapper {
-  position: relative;
-  margin-bottom: 10px;
-  color: #ccc;
-  font-size: 1rem;
-  line-height: 1.4em;
-  white-space: pre-wrap;
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Ссылка на проект */
-.project-link {
-  color: #1e7f5e;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-  display: inline-block;
-  margin-bottom: 10px;
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
 }
 
-.project-link:hover {
-  color: #3b4d3c;
-}
-
-/* Кнопка переключения описания */
-.toggle-desc-btn {
-  font-size: 0.9rem;
-  padding: 6px 12px;
-  margin-top: 5px;
-  background-color: transparent;
-  border: 1px solid #617561;
+.project-title {
+  font-size: 1.3rem;
   color: #b6d1cb;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  margin: 0;
+  word-break: break-all;
 }
 
-.toggle-desc-btn:hover {
-  background-color: #3b4d3c;
+.project-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-title a:hover {
+  text-decoration: underline;
+}
+
+.project-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #b6d1cb;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.project-github-link:hover {
+  background: rgba(110, 118, 129, 0.2);
   color: #e8f0ee;
 }
 
-/* Для корректного отображения переносов в описании */
-.project-description p,
-.project-description pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
+.project-github-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.project-description {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.project-readme {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.project-readme::-webkit-scrollbar {
+  width: 6px;
+}
+
+.project-readme::-webkit-scrollbar-thumb {
+  background: #1e7f5e;
+  border-radius: 3px;
+}
+
+.project-readme img {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+}
+
+.project-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.add-project-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 150px;
+}
+
+.add-project-card:hover {
+  border-color: #1e7f5e;
+  background: rgba(30, 127, 94, 0.05);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .project-card {
+    padding: 15px;
+  }
+  
+  .project-title {
+    font-size: 1.1rem;
+  }
 }
