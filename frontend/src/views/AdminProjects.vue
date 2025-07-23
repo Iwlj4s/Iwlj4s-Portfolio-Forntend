@@ -1,5 +1,27 @@
 <template>
   <div class="projects-container">
+    <div class="projects-header" style="display:flex; align-items:center; justify-content:flex-end; margin-bottom: 16px;">
+      <button 
+        class="logout-btn update-projects-btn" 
+        @click="updateAllProjects"
+        :disabled="isUpdating"
+        title="Обновить все проекты"
+        >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="logout-icon"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            :class="{ spin: isUpdating }"
+        >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M5 13a7 7 0 0114-2.5" />
+        </svg>
+
+    </button>
+    </div>
+
     <div v-if="isLoading" class="loading">Загрузка проектов...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <template v-else>
@@ -14,7 +36,7 @@
           </button>
         </template>
       </ProjectsCard>
-      
+
       <AddProjectModal
         v-if="showAddProjectModal"
         @close="showAddProjectModal = false"
@@ -32,6 +54,7 @@ import AddProjectModal from '../components/AddProjectModal.vue'
 
 const projects = ref([])
 const isLoading = ref(false)
+const isUpdating = ref(false)
 const error = ref(null)
 const showAddProjectModal = ref(false)
 
@@ -69,6 +92,22 @@ const deleteProject = async (projectId) => {
   } catch (err) {
     console.error('Error deleting project:', err)
     error.value = err.response?.data?.message || 'Ошибка удаления проекта'
+  }
+}
+
+const updateAllProjects = async () => {
+  if (isUpdating.value) return
+  isUpdating.value = true
+  try {
+    await axiosInstance.post('/admin/projects/update')
+    // После успешного обновления заново загрузим проекты
+    await loadProjects()
+    alert('Все проекты успешно обновлены')
+  } catch (err) {
+    console.error('Ошибка обновления проектов:', err)
+    alert(err.response?.data?.message || 'Ошибка обновления проектов')
+  } finally {
+    isUpdating.value = false
   }
 }
 

@@ -410,17 +410,23 @@ body {
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 30px;
+  justify-items: center; /* Центрируем карточки */
 }
 
 .project-card {
   background: #111;
-  padding: 20px;
+  padding: 25px;
   border-left: 3px solid #b6d1cb;
   border: 1px solid #b6d1cb;
   border-radius: 7px;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 550px; /* Фиксированная максимальная ширина */
+  min-height: 300px; /* Добавлено */
+  display: flex; /* Добавлено */
+  flex-direction: column; /* Добавлено */
 }
 
 .project-card:hover {
@@ -431,15 +437,22 @@ body {
 .project-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .project-title {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: #b6d1cb;
   margin: 0;
-  word-break: break-all;
+  word-break: break-word;
+}
+
+.project-subtitle{
+  font-size: 1.1rem;
+  color: #b6d1cb;
+  margin: 0;
+  word-break: break-word;
 }
 
 .project-title a {
@@ -454,17 +467,22 @@ body {
 .project-github-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: #b6d1cb;
   text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
   transition: all 0.3s ease;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+
 }
 
 .project-github-link:hover {
-  background: rgba(110, 118, 129, 0.2);
+  background: rgba(30, 127, 94, 0.2);
   color: #e8f0ee;
+  transform: translateY(-2px);
 }
 
 .project-github-icon {
@@ -473,18 +491,42 @@ body {
 }
 
 .project-description {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #ccc;
-  margin-bottom: 15px;
-  line-height: 1.5;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.readme-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
 }
 
 .project-readme {
-  max-height: 300px;
+  max-height: 490px; 
+  flex-grow: 1; /* Добавлено для заполнения пространства */
+
   overflow-y: auto;
   padding-right: 10px;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Стили для ссылок в readme */
+.project-readme a {
+  color: #1e7f5e;
+  text-decoration: none;
+  border-bottom: 1px dashed #1e7f5e;
+  transition: all 0.3s ease;
+  padding: 0 2px;
+}
+
+.project-readme a:hover {
+  color: #b6d1cb;
+  border-bottom-color: #b6d1cb;
+  background: rgba(30, 127, 94, 0.1);
 }
 
 .project-readme::-webkit-scrollbar {
@@ -499,11 +541,12 @@ body {
 .project-readme img {
   max-width: 100%;
   height: auto;
-  margin: 10px 0;
+  margin: 15px 0;
+  border-radius: 4px;
 }
 
 .project-actions {
-  margin-top: 15px;
+  margin-top: 20px;
   display: flex;
   gap: 10px;
 }
@@ -514,7 +557,8 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 150px;
+  min-height: 180px;
+  font-size: 1.2rem;
 }
 
 .add-project-card:hover {
@@ -523,16 +567,21 @@ body {
 }
 
 /* Адаптация для мобильных */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .projects-grid {
     grid-template-columns: 1fr;
   }
   
   .project-card {
-    padding: 15px;
+    max-width: 100%;
   }
-  
-  .project-title {
-    font-size: 1.1rem;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }
