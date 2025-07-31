@@ -9,7 +9,7 @@
         <svg class="update-icon" :class="{ spin: isUpdating }" viewBox="0 0 24 24">
           <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
         </svg>
-        <span>{{ isUpdating ? 'Обновление...' : 'Обновить все' }}</span>
+        <span>{{ isUpdating ? 'Обновление...' : 'Update all' }}</span>
       </button>
     </div>
 
@@ -63,7 +63,7 @@ const totalProjectsCount = ref(0)
 const updatedProjectsCount = ref(0)
 const currentProject = ref(null)
 const taskId = ref(null)
-const maxAttempts = ref(30) // Максимум 30 попыток (~1 минута)
+const maxAttempts = ref(30) 
 const attempts = ref(0)
 const checkInterval = ref(null)
 const error = ref(null)
@@ -71,15 +71,14 @@ const showAddProjectModal = ref(false)
 
 const loadProjects = async () => {
   try {
-    isLoading.value = true
-    error.value = null
-    const response = await axiosInstance.get('/admin/projects')
-    projects.value = response.data
+    console.log('Loading projects...')
+    const response = await axiosInstance.get('/admin/projects', {
+      params: { _t: Date.now() }
+    })
+    console.log('Received projects:', response.data)
+    projects.value = [...response.data]
   } catch (err) {
-    error.value = err.response?.data?.message || 'Ошибка загрузки проектов'
     console.error('Error loading projects:', err)
-  } finally {
-    isLoading.value = false
   }
 }
 
@@ -133,52 +132,74 @@ const startTaskStatusChecking = () => {
     
     try {
       const response = await axiosInstance.get(`/admin/tasks/${taskId.value}/status`);
+      
+      if (!response.data) {
+        throw new Error('Пустой ответ от сервера');
+      }
+
       const taskStatus = response.data;
       
       if (attempts.value >= maxAttempts.value) {
         finishTaskStatusChecking();
         isUpdating.value = false;
         alert('Превышено время ожидания обновления');
-        loadProjects(); // Загружаем проекты даже при таймауте
+        await loadProjects();
         return;
       }
       
-      switch (taskStatus.status) {
-        case 'NOT_FOUND':
-          finishTaskStatusChecking();
-          isUpdating.value = false;
-          loadProjects(); // Обновляем список
-          break;
-          
-        case 'PROGRESS':
-          progress.value = Math.floor((taskStatus.result.current / taskStatus.result.total) * 100);
+      if (taskStatus.status === 'NOT_FOUND') {
+        finishTaskStatusChecking();
+        isUpdating.value = false;
+        await loadProjects();
+        return;
+      }
+      
+      if (taskStatus.status === 'PROGRESS') {
+        if (taskStatus.result) {
+          progress.value = Math.floor(
+            (taskStatus.result.current / taskStatus.result.total) * 100
+          );
           updatedProjectsCount.value = taskStatus.result.updated || 0;
           totalProjectsCount.value = taskStatus.result.total || 0;
           currentProject.value = taskStatus.result.current_project || null;
-          break;
-          
-        case 'SUCCESS':
-          finishTaskStatusChecking();
-          progress.value = 100;
-          updatedProjectsCount.value = taskStatus.result.updated || totalProjectsCount.value;
-          totalProjectsCount.value = taskStatus.result.total || totalProjectsCount.value;
-          isUpdating.value = false;
-          loadProjects(); // Важно: обновляем список после успеха
-          break;
-          
-        case 'FAILURE':
-          finishTaskStatusChecking();
-          isUpdating.value = false;
-          loadProjects(); // Обновляем список даже при ошибке
-          alert('Ошибка при обновлении: ' + (taskStatus.result || 'Неизвестная ошибка'));
-          break;
+        }
+        return;
       }
-    } catch (err) {
-      console.error('Ошибка проверки статуса:', err);
-      if (err.response?.status === 404 || err.response?.status === 400) {
+      
+      if (taskStatus.status === 'SUCCESS') {
+        finishTaskStatusChecking();
+        progress.value = 100;
+        if (taskStatus.result) {
+          updatedProjectsCount.value = taskStatus.result.updated || 0;
+          totalProjectsCount.value = taskStatus.result.total || 0;
+        }
+        isUpdating.value = false;
+        await loadProjects(); 
+        return;
+      }
+      
+      if (taskStatus.status === 'FAILURE') {
         finishTaskStatusChecking();
         isUpdating.value = false;
-        loadProjects(); // Обновляем список при ошибке
+        await loadProjects();
+        alert('Ошибка при обновлении: ' + 
+          (taskStatus.result ? String(taskStatus.result) : 'Неизвестная ошибка'));
+        return;
+      }
+      
+    } catch (err) {
+      console.error('Ошибка проверки статуса:', err);
+      
+      if (attempts.value >= maxAttempts.value || 
+          err.response?.status === 404 || 
+          err.response?.status === 400) {
+        finishTaskStatusChecking();
+        isUpdating.value = false;
+        await loadProjects();
+        
+        if (err.response?.status === 404) {
+          alert('Задача не найдена или завершена');
+        }
       }
     }
   }, 2000);
