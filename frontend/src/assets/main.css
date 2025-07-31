@@ -585,3 +585,32 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.update-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: #b6d1cb;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+}
+
+.update-info:hover {
+  background: rgba(30, 127, 94, 0.2);
+  color: #e8f0ee;
+
+}
+
+.update-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.update-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
