@@ -2,17 +2,28 @@
   <div class="projects-container">
     <div class="projects-header" style="display:flex; align-items:center; justify-content:flex-end; margin-bottom: 16px;">
       <button 
-        class="logout-btn update-projects-btn" 
+        class="update-projects-btn" 
         @click="updateAllProjects"
         :disabled="isUpdating"
-        title="Обновить все проекты"
-        >
-       <svg class="update-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+      >
+        <svg class="update-icon" :class="{ spin: isUpdating }" viewBox="0 0 24 24">
+          <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
         </svg>
-
-    </button>
+        <span>{{ isUpdating ? 'Обновление...' : 'Обновить все' }}</span>
+      </button>
     </div>
+
+    <transition name="fade">
+      <div v-if="isUpdating" class="update-notification">
+        <div class="update-progress">
+          <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+        </div>
+        <p>
+          Обновлено: {{ updatedProjectsCount }} из {{ totalProjectsCount }} проектов
+          <span v-if="currentProject">({{ currentProject.owner_name }}/{{ currentProject.repo_name }})</span>
+        </p>
+      </div>
+    </transition>
 
     <div v-if="isLoading" class="loading">Загрузка проектов...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
@@ -39,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import axiosInstance from '../axiosInstance.js'
 import ProjectsCard from '../components/ProjectsCard.vue'
 import AddProjectModal from '../components/AddProjectModal.vue'
@@ -47,6 +58,14 @@ import AddProjectModal from '../components/AddProjectModal.vue'
 const projects = ref([])
 const isLoading = ref(false)
 const isUpdating = ref(false)
+const progress = ref(0)
+const totalProjectsCount = ref(0)
+const updatedProjectsCount = ref(0)
+const currentProject = ref(null)
+const taskId = ref(null)
+const maxAttempts = ref(30) // Максимум 30 попыток (~1 минута)
+const attempts = ref(0)
+const checkInterval = ref(null)
 const error = ref(null)
 const showAddProjectModal = ref(false)
 
@@ -89,19 +108,90 @@ const deleteProject = async (projectId) => {
 
 const updateAllProjects = async () => {
   if (isUpdating.value) return
+  
   isUpdating.value = true
+  progress.value = 0
+  updatedProjectsCount.value = 0
+  totalProjectsCount.value = 0
+  currentProject.value = null
+  attempts.value = 0
+
   try {
-    await axiosInstance.post('/admin/projects/update')
-    // После успешного обновления заново загрузим проекты
-    await loadProjects()
-    alert('Все проекты успешно обновлены')
+    const response = await axiosInstance.post('/admin/projects/update')
+    taskId.value = response.data.task_id
+    startTaskStatusChecking()
   } catch (err) {
-    console.error('Ошибка обновления проектов:', err)
-    alert(err.response?.data?.message || 'Ошибка обновления проектов')
-  } finally {
+    console.error('Ошибка запуска обновления:', err)
     isUpdating.value = false
+    alert(err.response?.data?.message || 'Ошибка запуска обновления')
   }
 }
+
+const startTaskStatusChecking = () => {
+  checkInterval.value = setInterval(async () => {
+    attempts.value++;
+    
+    try {
+      const response = await axiosInstance.get(`/admin/tasks/${taskId.value}/status`);
+      const taskStatus = response.data;
+      
+      if (attempts.value >= maxAttempts.value) {
+        finishTaskStatusChecking();
+        isUpdating.value = false;
+        alert('Превышено время ожидания обновления');
+        loadProjects(); // Загружаем проекты даже при таймауте
+        return;
+      }
+      
+      switch (taskStatus.status) {
+        case 'NOT_FOUND':
+          finishTaskStatusChecking();
+          isUpdating.value = false;
+          loadProjects(); // Обновляем список
+          break;
+          
+        case 'PROGRESS':
+          progress.value = Math.floor((taskStatus.result.current / taskStatus.result.total) * 100);
+          updatedProjectsCount.value = taskStatus.result.updated || 0;
+          totalProjectsCount.value = taskStatus.result.total || 0;
+          currentProject.value = taskStatus.result.current_project || null;
+          break;
+          
+        case 'SUCCESS':
+          finishTaskStatusChecking();
+          progress.value = 100;
+          updatedProjectsCount.value = taskStatus.result.updated || totalProjectsCount.value;
+          totalProjectsCount.value = taskStatus.result.total || totalProjectsCount.value;
+          isUpdating.value = false;
+          loadProjects(); // Важно: обновляем список после успеха
+          break;
+          
+        case 'FAILURE':
+          finishTaskStatusChecking();
+          isUpdating.value = false;
+          loadProjects(); // Обновляем список даже при ошибке
+          alert('Ошибка при обновлении: ' + (taskStatus.result || 'Неизвестная ошибка'));
+          break;
+      }
+    } catch (err) {
+      console.error('Ошибка проверки статуса:', err);
+      if (err.response?.status === 404 || err.response?.status === 400) {
+        finishTaskStatusChecking();
+        isUpdating.value = false;
+        loadProjects(); // Обновляем список при ошибке
+      }
+    }
+  }, 2000);
+}
+
+const finishTaskStatusChecking = () => {
+  if (checkInterval.value) {
+    clearInterval(checkInterval.value)
+    checkInterval.value = null
+  }
+}
+
+onBeforeUnmount(finishTaskStatusChecking)
 
 onMounted(loadProjects)
 </script>
