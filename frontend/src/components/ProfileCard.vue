@@ -18,7 +18,6 @@
           </button>
         </div>
 
-                <!-- Новая иконка GitHub -->
         <a 
           :href="'https://github.com/' + userGithubData.github_login" 
           target="_blank" 

@@ -137,26 +137,28 @@ body {
 
 .edit-button {
   font-family: 'JetBrains Mono', monospace;
-
-  background-color: #617561; /* зеленый */
-  color: rgb(255, 255, 255);
-  padding: 15px 15px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b6d1cb;
+  text-decoration: none;
+  margin: 5px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
   font-weight: 600;
   font-size: 15px;
-  transition: background-color 0.3s ease;
-
-  margin-top: 50px;
-
+  cursor: pointer;
 }
 
 .edit-button:hover {
-  background-color: #3b4d3c;
+  background: rgba(30, 127, 94, 0.2);
+  color: #e8f0ee;
+  transform: translateY(-2px);
 }
 
-/* Общий стиль кнопок, аналогичный .edit-button */
 .button-common {
   font-family: 'JetBrains Mono', monospace;
   background-color: #617561; /* зеленый */
@@ -227,7 +229,6 @@ body {
   overflow-y: auto; /* прокрутка, если текста много */
 }
 
-/* Можно дополнительно ограничить ширину, если надо */
 .bio-editor-container, .quill-wrapper {
   overflow: hidden;
 }
@@ -656,6 +657,93 @@ body {
   transform: translateY(20px);
 }
 
+.project-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; 
+}
+
+.delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b6d1cb;
+  text-decoration: none;
+  margin: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+}
+
+.delete-btn:hover {
+  background: rgba(30, 127, 94, 0.2);
+  color: #e8f0ee;
+  transform: translateY(-2px);
+}
+
+/* Стиль для кнопки обновления в углу */
+.update-corner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b6d1cb;
+  text-decoration: none;
+  margin: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+}
+
+.update-corner-btn:hover:not(:disabled) {
+  background: rgba(30, 127, 94, 0.2);
+  color: #e8f0ee;
+  transform: translateY(-2px);
+}
+
+.update-corner-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.update-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+
+.save-button{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b6d1cb;
+  text-decoration: none;
+  margin: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+}
+
+.cancel-button{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b6d1cb;
+  text-decoration: none;
+  margin: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: rgba(30, 127, 94, 0.1);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+}
 
 .spin {
   animation: spin 1s linear infinite;
