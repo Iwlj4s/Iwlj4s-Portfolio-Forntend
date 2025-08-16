@@ -35,7 +35,14 @@
       >
         <template #admin-content="{ project }">
           <button @click="deleteProject(project.id)" class="button-common delete-btn">
-            Удалить
+              Удалить
+          </button>
+
+          <button @click="updateSingleProject(project.id)" class="button-common update-btn" :disabled="updatingProjectId === project.id || isUpdating">
+            <svg class="update-icon" :class="{ spin: updatingProjectId === project.id }" viewBox="0 0 24 24">
+                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+            </svg>
+            <span>{{ updatingProjectId === project.id ? 'Обновление...' : 'Обновить' }}</span>
           </button>
         </template>
       </ProjectsCard>
@@ -68,6 +75,8 @@ const attempts = ref(0)
 const checkInterval = ref(null)
 const error = ref(null)
 const showAddProjectModal = ref(false)
+const updatingProjectId = ref(null);
+
 
 const loadProjects = async () => {
   try {
@@ -125,6 +134,25 @@ const updateAllProjects = async () => {
     alert(err.response?.data?.message || 'Ошибка запуска обновления')
   }
 }
+
+const updateSingleProject = async (projectId) => {
+    if (updatingProjectId.value === projectId || isUpdating.value) return; 
+
+    updatingProjectId.value = projectId; 
+    isUpdating.value = true; 
+
+    try {
+        const response = await axiosInstance.post(`/admin/projects/update/${projectId}`);
+        taskId.value = response.data.task_id;
+        startTaskStatusChecking();
+    } catch (err) {
+        console.error('Ошибка запуска обновления:', err);
+        alert(err.response?.data?.message || 'Ошибка запуска обновления');
+    } finally {
+        isUpdating.value = false; 
+        updatingProjectId.value = null; 
+    }
+};
 
 const startTaskStatusChecking = () => {
   checkInterval.value = setInterval(async () => {
@@ -204,6 +232,7 @@ const startTaskStatusChecking = () => {
     }
   }, 2000);
 }
+
 
 const finishTaskStatusChecking = () => {
   if (checkInterval.value) {

@@ -656,6 +656,7 @@ body {
   transform: translateY(20px);
 }
 
+
 .spin {
   animation: spin 1s linear infinite;
 }
