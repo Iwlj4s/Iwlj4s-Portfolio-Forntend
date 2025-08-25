@@ -611,16 +611,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px; /* Ширина кнопки */
+  height: 40px; /* Высота кнопки */
+  background: rgba(30, 127, 94, 0.2);
+  border: 1px solid rgba(182, 209, 203, 0.3);
+  border-radius: 6px;
+  color: #b6d1cb;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 180px;
-  font-size: 1.2rem;
 }
 
 .add-project-card:hover {
-  border-color: #1e7f5e;
-  background: rgba(30, 127, 94, 0.05);
+  background: rgba(30, 127, 94, 0.3);
+  transform: translateY(-2px);
 }
+
+.add-project-icon {
+  width: 20px; /* Размер иконки */
+  height: 20px; /* Размер иконки */
+  color: #b6d1cb; /* Цвет иконки */
+}
+
+
 
 /* Модальное окно для добавления проекта */
 .modal-overlay {

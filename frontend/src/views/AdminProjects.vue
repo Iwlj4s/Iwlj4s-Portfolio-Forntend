@@ -11,6 +11,18 @@
         </svg>
         <span>{{ isUpdating ? 'Обновление...' : 'Update all' }}</span>
       </button>
+
+
+      <div
+        class="add-project-card" 
+        @click="showAddProjectModal = true"
+        style="margin-left: 10px;" 
+        :disabled="isUpdating"
+      >
+        <svg class="add-project-icon" viewBox="0 0 24 24">
+          <path d="M12 2v20m10-10H2" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </div>
     </div>
 
     <transition name="fade">

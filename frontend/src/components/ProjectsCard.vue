@@ -33,14 +33,6 @@
         <slot name="admin-content" :project="project"></slot>
       </div>
     </div>
-    
-    <div 
-      v-if="isAdmin" 
-      class="project-card add-project-card" 
-      @click="$emit('add-project')"
-    >
-      <span>+ Добавить проект</span>
-    </div>
   </div>
 </template>
 
