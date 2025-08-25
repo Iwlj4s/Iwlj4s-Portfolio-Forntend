@@ -10,7 +10,6 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import ProfileCard from '../components/ProfileCard.vue';
-import '../assets/main.css';
 import '../assets/base.css';
 
 const userGithubData = ref({});
