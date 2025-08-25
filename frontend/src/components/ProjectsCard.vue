@@ -18,9 +18,10 @@
           </svg>
           <span class="github-text">GitHub link</span>
         </a>
+        
       </div>
       
-      <div v-if="project.description" class="project-description">
+      <div class="project-description">
         {{ project.description }}
       </div>
       

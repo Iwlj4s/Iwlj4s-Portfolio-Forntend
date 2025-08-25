@@ -25,6 +25,13 @@
       </div>
     </transition>
 
+    <DeleteConfirmModal
+      :show="showDeleteConfirm"
+      :project-name="projectToDelete?.repo_name || ''"
+      @close="closeDeleteConfirm"
+      @confirm="confirmDelete"
+    />
+
     <div v-if="isLoading" class="loading">Загрузка проектов...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <template v-else>
@@ -34,10 +41,9 @@
         @add-project="showAddProjectModal = true"
       >
         <template #admin-content="{ project }">
-          <button @click="deleteProject(project.id)" class="button-common delete-btn project-actions">
+          <button @click="initiateDelete(project)" class="button-common delete-btn project-actions">
               Delete
           </button>
-
           <button @click="updateSingleProject(project.id)" class="button-common update-corner-btn" :disabled="updatingProjectId === project.id || isUpdating">
             <svg class="update-icon" :class="{ spin: updatingProjectId === project.id }" viewBox="0 0 24 24">
                 <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
@@ -61,6 +67,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import axiosInstance from '../axiosInstance.js'
 import ProjectsCard from '../components/ProjectsCard.vue'
 import AddProjectModal from '../components/AddProjectModal.vue'
+import DeleteConfirmModal from '../components/DeleteConfirmModal.vue'
+
 
 const projects = ref([])
 const isLoading = ref(false)
@@ -76,6 +84,8 @@ const checkInterval = ref(null)
 const error = ref(null)
 const showAddProjectModal = ref(false)
 const updatingProjectId = ref(null);
+const projectToDelete = ref(null); 
+const showDeleteConfirm = ref(false);
 
 
 const loadProjects = async () => {
@@ -102,17 +112,29 @@ const addProject = async (projectData) => {
   }
 }
 
-const deleteProject = async (projectId) => {
-  if (!confirm('Вы уверены, что хотите удалить этот проект?')) return
+const initiateDelete = (project) => {
+  projectToDelete.value = project;
+  showDeleteConfirm.value = true;
+};
+
+const closeDeleteConfirm = () => {
+  showDeleteConfirm.value = false;
+  projectToDelete.value = null;
+};
+
+const confirmDelete = async () => {
+  if (!projectToDelete.value) return;
   
   try {
-    await axiosInstance.delete(`/admin/projects/delete/${projectId}`)
-    await loadProjects()
+    await axiosInstance.delete(`/admin/projects/delete/${projectToDelete.value.id}`);
+    await loadProjects();
+    closeDeleteConfirm();
   } catch (err) {
-    console.error('Error deleting project:', err)
-    error.value = err.response?.data?.message || 'Ошибка удаления проекта'
+    console.error('Error deleting project:', err);
+    error.value = err.response?.data?.message || 'Ошибка удаления проекта';
+    closeDeleteConfirm();
   }
-}
+};
 
 const updateAllProjects = async () => {
   if (isUpdating.value) return
